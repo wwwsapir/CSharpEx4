@@ -18,7 +18,7 @@ namespace Ex04.Menus.Delegates
             SetFirstItem(); // Sets the first item to "Back" or "Exit"
         }
 
-        protected virtual void SetFirstItem()   // Sets the first item to "Back"
+        protected virtual void SetFirstItem()   // Sets the first item name to "Back"
         {
             m_ExitOrBack = "Back";
         }
@@ -28,12 +28,14 @@ namespace Ex04.Menus.Delegates
             get { return r_Items; }
         }
 
-        private void printMenu()
+        private void printMenu()    // Presents the nemu on the screen
         {
             Console.Clear();
+            // Present the exit/back option:
             Console.WriteLine(r_MenuName + ":");
             string firstLine = "0 : " + m_ExitOrBack;
             Console.WriteLine(firstLine);
+            // Present the rest of the items:
             string currItemToShow;
             foreach (KeyValuePair<MenuItem, Action> item in r_Items)
             {
@@ -47,7 +49,7 @@ namespace Ex04.Menus.Delegates
             Console.WriteLine("Please enter the number of the item you'd like to choose:");
             string input = Console.ReadLine();
             int currChoice;
-            bool choiceValid;
+            bool choiceValid = true;
             bool isFormatValid = int.TryParse(input, out currChoice);
             if (!isFormatValid || currChoice < 0 || currChoice > r_Items.Count)
             {
@@ -56,23 +58,29 @@ namespace Ex04.Menus.Delegates
 
             i_UsersChoice = currChoice;
 
-            return true;
+            return choiceValid;
         }
 
-        protected void ShowMenu()   // Protected - only operates from the MainMenu (son)
+        protected void ShowMenu()   // Protected - only operates as public from the MainMenu (son of Menu)
         {
             while (true)
             {
                 printMenu();
                 int userChoice;
                 bool validInput;
+                // Get input from user: 
                 do
                 {
                     validInput = tryGetChoiceFromUser(out userChoice);
+                    if (!validInput)
+                    {
+                        Console.WriteLine("Input is not valid.");
+                    }
                 } while (!validInput);
 
                 if (userChoice != 0)
                 {
+                    // Find the chosen item and let all its listeners know about it
                     foreach (KeyValuePair<MenuItem, Action> item in r_Items)
                     {
                         if (item.Key.ItemNumberInMenu == userChoice)
@@ -83,34 +91,34 @@ namespace Ex04.Menus.Delegates
                 }
                 else
                 {
+                    // '0' was chosen - exit the loop
                     break;
                 }
             }
         }
 
+        // Adds an item to menu that operates a function that is not another menu
         public void AddActionMenuItem(string i_Description, Action i_FunctionToInvoke)
         {
             MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
-            newMenuItem.ReportChosenDelegates += OnItemChosen;
+            newMenuItem.ReportChosenDelegates += onItemChosen;
             Items.Add(newMenuItem, i_FunctionToInvoke);
         }
 
+        // Adds an item to the menu that operates another sub-menu and creates that sub-menu
         public Menu AddSubMenuItem(string i_Description)
         {
-            const bool v_SubMenu = true;
-
             r_SubMenusList.Add(new Menu(i_Description));
             MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
-            newMenuItem.ReportChosenDelegates += OnItemChosen;
+            newMenuItem.ReportChosenDelegates += onItemChosen;
             r_Items.Add(newMenuItem, r_SubMenusList[r_SubMenusList.Count - 1].ShowMenu);
 
             return r_SubMenusList[r_SubMenusList.Count - 1];
         }
-
-        private void OnItemChosen(MenuItem i_MenuItem)
+        
+        // The action to do when an item is chosen
+        private void onItemChosen(MenuItem i_MenuItem)
         {
-            const bool v_SubMenu = true;
-
             Action functionToInvoke;
             r_Items.TryGetValue(i_MenuItem, out functionToInvoke);
             functionToInvoke.Invoke();

@@ -2,8 +2,7 @@
 
 namespace Ex04.Menus.Delegates
 {
-
-    public class MenuItem
+    public sealed class MenuItem
     {
         private readonly string r_Description;
         private readonly int r_ItemNumberInMenu;
@@ -26,6 +25,7 @@ namespace Ex04.Menus.Delegates
             get { return r_ItemNumberInMenu; }
         }
 
+        // Let all Listeners know that this item was chosen
         public void OnItemChosen()
         {
             if (ReportChosenDelegates != null)

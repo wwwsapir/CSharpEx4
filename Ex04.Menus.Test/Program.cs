@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex04.Menus.Test
 {
@@ -11,7 +7,11 @@ namespace Ex04.Menus.Test
         const string k_CurrentVersion = "Version: 16.1.4.0";
         public static void Main()
         {
-            //First Test Menu:
+            //Interfaces Test Menu:
+
+            //throw new NotImplementedException();
+
+            //Delegates Test Menu:
             Delegates.MainMenu firstMainMenu = new Delegates.MainMenu();
             //First Layer:
             Delegates.Menu dateTimeMenu = firstMainMenu.AddSubMenuItem("Show Date/Time");
@@ -27,18 +27,16 @@ namespace Ex04.Menus.Test
             //Show the menu:
             firstMainMenu.ShowMenu();
 
-            //Second Test Menu:
-
         }
 
         private static void showDate()
         {
-            PromptMessage(DateTime.Today.ToString());
+            PromptMessage(DateTime.Today.ToShortDateString());
         }
 
         private static void showTime()
         {
-            PromptMessage(DateTime.Now.ToString());
+            PromptMessage(DateTime.Now.ToShortTimeString());
         }
 
         private static void showVersion()
@@ -48,23 +46,46 @@ namespace Ex04.Menus.Test
 
         private static void countSpaces()
         {
+            int spacesCounter = 0;
             string sentenceToCountSpaces = getSentenceFromUser();
+            foreach (char character in sentenceToCountSpaces)
+            {
+                if (character == ' ')
+                {
+                    ++spacesCounter;
+                }
+            }
+
             string outputStr = string.Format("The number of spaces in the sentence is: {0}",
-                sentenceToCountSpaces.Count(Char.IsWhiteSpace));
+                spacesCounter);
             PromptMessage(outputStr);
         }
 
         private static void countWords()
         {
             string sentenceToCountWords = getSentenceFromUser();
+            // Split the sentence by spaces to get all words
+            string[] words = sentenceToCountWords.Split();
+            int wordsNumber = words.Length;
+            // Get rid of "ghost" words:
+            foreach (string word in words)
+            {
+                if (word == "")
+                {
+                    --wordsNumber;
+                }
+            }
+
+            // Show the final words count
             string outputStr = string.Format("The number of words in the sentence is: {0}",
-                sentenceToCountWords.Split().Length);
+                wordsNumber);
             PromptMessage(outputStr);
         }
 
         private static string getSentenceFromUser()
         {
             Console.WriteLine("Please enter a sentence:");
+
             return Console.ReadLine();
         }
 

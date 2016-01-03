@@ -1,19 +1,12 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex04.Menus.Delegates
+﻿namespace Ex04.Menus.Delegates
 {
-    public class MainMenu : Menu
+    public sealed class MainMenu : Menu
     {
         public MainMenu() : base("Main Menu")
         {
         }
 
-        protected override void SetFirstItem()   // Sets the first item to "Exit"
+        protected override void SetFirstItem()   // Sets the first item name to "Exit"
         {
             m_ExitOrBack = "Exit";
         }
