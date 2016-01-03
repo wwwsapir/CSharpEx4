@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ex04.Menus.Delegates", "Ex04.Menus.Delegates\Ex04.Menus.Delegates.csproj", "{56E8B426-185C-40F8-8B03-6225CF74DBAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ex04.Menus.Test", "Ex04.Menus.Test\Ex04.Menus.Test.csproj", "{99546BF6-989D-449A-A0BC-1A593BD8B8AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{56E8B426-185C-40F8-8B03-6225CF74DBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56E8B426-185C-40F8-8B03-6225CF74DBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56E8B426-185C-40F8-8B03-6225CF74DBAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99546BF6-989D-449A-A0BC-1A593BD8B8AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99546BF6-989D-449A-A0BC-1A593BD8B8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99546BF6-989D-449A-A0BC-1A593BD8B8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99546BF6-989D-449A-A0BC-1A593BD8B8AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

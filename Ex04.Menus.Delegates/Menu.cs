@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ex04.Menus.Delegates
 {
-    class Menu
+    public class Menu
     {
-        public readonly bool r_Sub;
+        public readonly string r_MenuName;
         private readonly Dictionary<MenuItem, Action> r_Items;
-        private readonly List<Menu> r_SubMenusList = new List<Menu>(); 
+        private readonly List<Menu> r_SubMenusList = new List<Menu>();
 
-        public Menu(bool i_IsSubMenu)  // Used to create a main menu or a sub-manu with an unknown number of items
+        public string m_ExitOrBack;
+
+        public Menu(string i_MenuName)  // Used to create a main menu or a sub-manu with an unknown number of items
         {
+            r_MenuName = i_MenuName;
             r_Items = new Dictionary<MenuItem, Action>();
-            r_Sub = i_IsSubMenu;
+            SetFirstItem(); // Sets the first item to "Back" or "Exit"
+        }
+
+        protected virtual void SetFirstItem()   // Sets the first item to "Back"
+        {
+            m_ExitOrBack = "Back";
         }
 
         public Dictionary<MenuItem, Action> Items 
@@ -26,70 +31,89 @@ namespace Ex04.Menus.Delegates
         private void printMenu()
         {
             Console.Clear();
-            string firstLine = r_Sub ? "0: Back" : "0: Exit";
+            Console.WriteLine(r_MenuName + ":");
+            string firstLine = "0 : " + m_ExitOrBack;
             Console.WriteLine(firstLine);
             string currItemToShow;
-            int i = 1;
             foreach (KeyValuePair<MenuItem, Action> item in r_Items)
             {
-                currItemToShow = string.Format("{0} : {1}", i++, item.Key.Description);
+                currItemToShow = string.Format("{0} : {1}", item.Key.ItemNumberInMenu, item.Key.Description);
                 Console.WriteLine(currItemToShow);
             }
         }
 
-        private int getChoiceFromUser()
+        private bool tryGetChoiceFromUser(out int i_UsersChoice)
         {
             Console.WriteLine("Please enter the number of the item you'd like to choose:");
             string input = Console.ReadLine();
             int currChoice;
+            bool choiceValid;
             bool isFormatValid = int.TryParse(input, out currChoice);
-            if (!isFormatValid)
+            if (!isFormatValid || currChoice < 0 || currChoice > r_Items.Count)
             {
-                throw new FormatException("Invalid input format!");
+                choiceValid = false;
             }
 
-            if (currChoice < 0 || currChoice > r_Items.Count)
-            {
-                throw new IndexOutOfRangeException("Input number out of range!");
-            }
+            i_UsersChoice = currChoice;
 
-            return currChoice;
+            return true;
         }
 
-        public void ShowMenu()
+        protected void ShowMenu()   // Protected - only operates from the MainMenu (son)
         {
-            printMenu();
-            int userChoice = getChoiceFromUser();
-            int i = 1;
-            foreach (KeyValuePair<MenuItem, Action> item in r_Items)
+            while (true)
             {
-                if (i == userChoice)
+                printMenu();
+                int userChoice;
+                bool validInput;
+                do
                 {
-                    item.Key.OnItemChosen();
+                    validInput = tryGetChoiceFromUser(out userChoice);
+                } while (!validInput);
+
+                if (userChoice != 0)
+                {
+                    foreach (KeyValuePair<MenuItem, Action> item in r_Items)
+                    {
+                        if (item.Key.ItemNumberInMenu == userChoice)
+                        {
+                            item.Key.OnItemChosen();
+                        }
+                    }
+                }
+                else
+                {
+                    break;
                 }
             }
         }
 
         public void AddActionMenuItem(string i_Description, Action i_FunctionToInvoke)
         {
-            Items.Add(new MenuItem(i_Description), i_FunctionToInvoke);
+            MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
+            newMenuItem.ReportChosenDelegates += OnItemChosen;
+            Items.Add(newMenuItem, i_FunctionToInvoke);
         }
 
-        public void AddSubMenuItem(string i_Description, Menu i_SubMenuToAdd)
+        public Menu AddSubMenuItem(string i_Description)
         {
             const bool v_SubMenu = true;
 
-            r_SubMenusList.Add(new Menu(v_SubMenu));
-            int currSubMenuIndex = r_SubMenusList.IndexOf(new Menu(v_SubMenu));
-            r_Items.Add(new MenuItem(i_Description), r_SubMenusList[currSubMenuIndex].ShowMenu);
-            r_Items[itemIndex].ReportChosenDelegates += OnItemChosen;
+            r_SubMenusList.Add(new Menu(i_Description));
+            MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
+            newMenuItem.ReportChosenDelegates += OnItemChosen;
+            r_Items.Add(newMenuItem, r_SubMenusList[r_SubMenusList.Count - 1].ShowMenu);
+
+            return r_SubMenusList[r_SubMenusList.Count - 1];
         }
+
         private void OnItemChosen(MenuItem i_MenuItem)
         {
             const bool v_SubMenu = true;
 
-            int currSubMenuIndex = r_SubMenusList.IndexOf(new Menu(v_SubMenu));
-            r_SubMenusList[currSubMenuIndex].
+            Action functionToInvoke;
+            r_Items.TryGetValue(i_MenuItem, out functionToInvoke);
+            functionToInvoke.Invoke();
         }
     }
 }
