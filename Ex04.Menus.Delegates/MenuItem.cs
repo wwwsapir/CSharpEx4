@@ -2,12 +2,12 @@
 
 namespace Ex04.Menus.Delegates
 {
-    public sealed class MenuItem
+    public class MenuItem
     {
         private readonly string r_Description;
         private readonly int r_ItemNumberInMenu;
 
-        public event Action<MenuItem> ReportChosenDelegates;
+        public event Action<MenuItem> ItemChosenHandler;
 
         public MenuItem(string i_Description, int i_ItemNumberInMenu)
         {
@@ -25,12 +25,17 @@ namespace Ex04.Menus.Delegates
             get { return r_ItemNumberInMenu; }
         }
 
-        // Let all Listeners know that this item was chosen
-        public void OnItemChosen()
+        public void Choose()
         {
-            if (ReportChosenDelegates != null)
+            OnItemChosen();
+        }
+
+        // Let all Listeners know that this item was chosen
+        protected void OnItemChosen()
+        {
+            if (ItemChosenHandler != null)
             {
-                ReportChosenDelegates.Invoke(this);
+                ItemChosenHandler.Invoke(this);
             }
         }
     }

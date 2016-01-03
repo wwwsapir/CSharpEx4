@@ -80,12 +80,12 @@ namespace Ex04.Menus.Delegates
 
                 if (userChoice != 0)
                 {
-                    // Find the chosen item and let all its listeners know about it
+                    // Find the chosen item and let it know it has been chosen
                     foreach (KeyValuePair<MenuItem, Action> item in r_Items)
                     {
                         if (item.Key.ItemNumberInMenu == userChoice)
                         {
-                            item.Key.OnItemChosen();
+                            item.Key.Choose();
                         }
                     }
                 }
@@ -101,7 +101,7 @@ namespace Ex04.Menus.Delegates
         public void AddActionMenuItem(string i_Description, Action i_FunctionToInvoke)
         {
             MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
-            newMenuItem.ReportChosenDelegates += onItemChosen;
+            newMenuItem.ItemChosenHandler += menuItem_Chosen;
             Items.Add(newMenuItem, i_FunctionToInvoke);
         }
 
@@ -110,14 +110,14 @@ namespace Ex04.Menus.Delegates
         {
             r_SubMenusList.Add(new Menu(i_Description));
             MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
-            newMenuItem.ReportChosenDelegates += onItemChosen;
+            newMenuItem.ItemChosenHandler += menuItem_Chosen;
             r_Items.Add(newMenuItem, r_SubMenusList[r_SubMenusList.Count - 1].ShowMenu);
 
             return r_SubMenusList[r_SubMenusList.Count - 1];
         }
         
         // The action to do when an item is chosen
-        private void onItemChosen(MenuItem i_MenuItem)
+        private void menuItem_Chosen(MenuItem i_MenuItem)
         {
             Action functionToInvoke;
             r_Items.TryGetValue(i_MenuItem, out functionToInvoke);
