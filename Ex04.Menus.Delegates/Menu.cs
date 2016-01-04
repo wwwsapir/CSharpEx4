@@ -85,7 +85,8 @@ namespace Ex04.Menus.Delegates
                     {
                         if (item.Key.ItemNumberInMenu == userChoice)
                         {
-                            item.Key.Choose();
+                            // Choose the current item
+                            item.Key.ChooseItem();
                         }
                     }
                 }
@@ -101,7 +102,7 @@ namespace Ex04.Menus.Delegates
         public void AddActionMenuItem(string i_Description, Action i_FunctionToInvoke)
         {
             MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
-            newMenuItem.ItemChosenHandler += menuItem_Chosen;
+            newMenuItem.EventHandlerWhenChosen += menuItem_Chosen;
             Items.Add(newMenuItem, i_FunctionToInvoke);
         }
 
@@ -110,7 +111,7 @@ namespace Ex04.Menus.Delegates
         {
             r_SubMenusList.Add(new Menu(i_Description));
             MenuItem newMenuItem = new MenuItem(i_Description, r_Items.Count + 1);
-            newMenuItem.ItemChosenHandler += menuItem_Chosen;
+            newMenuItem.EventHandlerWhenChosen += menuItem_Chosen;
             r_Items.Add(newMenuItem, r_SubMenusList[r_SubMenusList.Count - 1].ShowMenu);
 
             return r_SubMenusList[r_SubMenusList.Count - 1];

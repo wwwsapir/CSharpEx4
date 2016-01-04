@@ -7,7 +7,7 @@ namespace Ex04.Menus.Delegates
         private readonly string r_Description;
         private readonly int r_ItemNumberInMenu;
 
-        public event Action<MenuItem> ItemChosenHandler;
+        public event Action<MenuItem> EventHandlerWhenChosen;
 
         public MenuItem(string i_Description, int i_ItemNumberInMenu)
         {
@@ -25,17 +25,18 @@ namespace Ex04.Menus.Delegates
             get { return r_ItemNumberInMenu; }
         }
 
-        public void Choose()
+        public void ChooseItem()
         {
             OnItemChosen();
+            // In the future, this function can also contain other actions to do when chosen, apart from notifying listeners.
         }
 
         // Let all Listeners know that this item was chosen
         protected void OnItemChosen()
         {
-            if (ItemChosenHandler != null)
+            if (EventHandlerWhenChosen != null)
             {
-                ItemChosenHandler.Invoke(this);
+                EventHandlerWhenChosen.Invoke(this);
             }
         }
     }
