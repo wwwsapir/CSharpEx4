@@ -62,9 +62,6 @@
       <Name>Ex04.Menus.Delegates</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="SUBMIT DN MTA A16 Ex04 BarSasson 200959286 SapirZeelon 201028867.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

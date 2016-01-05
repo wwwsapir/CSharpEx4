@@ -1,4 +1,4 @@
-﻿==========================Exercise Checking Report==========================
+==========================Exercise Checking Report==========================
 Exercise No...........: 4
 First Student Details: 200959286 - Bar Sasson
 Second Student Details: 201028867 - Sapir Zeelon
