@@ -4,85 +4,56 @@ namespace Ex04.Menus.Test
 {
     public class Program
     {
-        const string k_CurrentVersion = "Version: 16.1.4.0";
         public static void Main()
         {
-            //Interfaces Test Menu:
+            // Interfaces Test Menu:
+            interfaceMenuTest();
 
-            //throw new NotImplementedException();
+            // Delegates Test Menu:
+            delegateMenuTest();
+        }
 
-            //Delegates Test Menu:
+        private static void interfaceMenuTest()
+        {
+            Interfaces.MainMenu firstMainMenu = new Interfaces.MainMenu("Main Menu");
+            Interfaces.Menu dateTimeMenu = firstMainMenu.AddSubMenu("Show Data/Time");
+            dateTimeMenu.AddOperation(new DateOperation(), "Show Date");
+            dateTimeMenu.AddOperation(new TimeOperation(), "Show Time");
+
+            Interfaces.Menu versionAndActionsMenu = firstMainMenu.AddSubMenu("Version and Actions");
+            versionAndActionsMenu.AddOperation(new ShowVersionOperation(), "Show Version");
+
+            Interfaces.Menu actionSubMenu = versionAndActionsMenu.AddSubMenu("Action");
+            actionSubMenu.AddOperation(new CountSpacesOperation(), "Count Spaces");
+            actionSubMenu.AddOperation(new CountWordsOperation(), "Count Words");
+
+            firstMainMenu.Show();
+            Console.Clear();
+        }
+
+        private static void delegateMenuTest()
+        {
             Delegates.MainMenu firstMainMenu = new Delegates.MainMenu();
-            //First Layer:
+
+            // First Layer:
             Delegates.Menu dateTimeMenu = firstMainMenu.AddSubMenuItem("Show Date/Time");
             Delegates.Menu versionAndActionsMenu = firstMainMenu.AddSubMenuItem("Version and Actions");
-            //Second Layer:
-            dateTimeMenu.AddActionMenuItem("Show Date", showDate);
-            dateTimeMenu.AddActionMenuItem("Show Time", showTime);
+
+            // Second Layer:
+            dateTimeMenu.AddActionMenuItem("Show Date", new DateOperation().Operate);
+            dateTimeMenu.AddActionMenuItem("Show Time", new TimeOperation().Operate);
             Delegates.Menu actionsMenu = versionAndActionsMenu.AddSubMenuItem("Actions");
-            versionAndActionsMenu.AddActionMenuItem("Show Version", showVersion);
-            //Third Layer:
-            actionsMenu.AddActionMenuItem("Count Spaces", countSpaces);
-            actionsMenu.AddActionMenuItem("Count Words", countWords);
-            //Show the menu:
+            versionAndActionsMenu.AddActionMenuItem("Show Version", new ShowVersionOperation().Operate);
+
+            // Third Layer:
+            actionsMenu.AddActionMenuItem("Count Spaces", new CountSpacesOperation().Operate);
+            actionsMenu.AddActionMenuItem("Count Words", new CountWordsOperation().Operate);
+
+            // Show the menu:
             firstMainMenu.ShowMenu();
-
         }
 
-        private static void showDate()
-        {
-            PromptMessage(DateTime.Today.ToShortDateString());
-        }
-
-        private static void showTime()
-        {
-            PromptMessage(DateTime.Now.ToShortTimeString());
-        }
-
-        private static void showVersion()
-        {
-            PromptMessage(k_CurrentVersion);
-        }
-
-        private static void countSpaces()
-        {
-            int spacesCounter = 0;
-            string sentenceToCountSpaces = getSentenceFromUser();
-            foreach (char character in sentenceToCountSpaces)
-            {
-                if (character == ' ')
-                {
-                    ++spacesCounter;
-                }
-            }
-
-            string outputStr = string.Format("The number of spaces in the sentence is: {0}",
-                spacesCounter);
-            PromptMessage(outputStr);
-        }
-
-        private static void countWords()
-        {
-            string sentenceToCountWords = getSentenceFromUser();
-            // Split the sentence by spaces to get all words
-            string[] words = sentenceToCountWords.Split();
-            int wordsNumber = words.Length;
-            // Get rid of "ghost" words:
-            foreach (string word in words)
-            {
-                if (word == "")
-                {
-                    --wordsNumber;
-                }
-            }
-
-            // Show the final words count
-            string outputStr = string.Format("The number of words in the sentence is: {0}",
-                wordsNumber);
-            PromptMessage(outputStr);
-        }
-
-        private static string getSentenceFromUser()
+        internal static string GetSentenceFromUser()
         {
             Console.WriteLine("Please enter a sentence:");
 
@@ -90,7 +61,7 @@ namespace Ex04.Menus.Test
         }
 
         // clear screen and prompt message to user
-        public static void PromptMessage(string i_Message)
+        internal static void PromptMessage(string i_Message)
         {
             Console.Clear();
             Console.WriteLine(i_Message);

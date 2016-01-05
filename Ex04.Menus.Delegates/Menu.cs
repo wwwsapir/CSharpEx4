@@ -5,7 +5,7 @@ namespace Ex04.Menus.Delegates
 {
     public class Menu
     {
-        public readonly string r_MenuName;
+        private readonly string r_MenuName;
         private readonly Dictionary<MenuItem, Action> r_Items;
         private readonly List<Menu> r_SubMenusList = new List<Menu>();
 
@@ -28,13 +28,23 @@ namespace Ex04.Menus.Delegates
             get { return r_Items; }
         }
 
+        public string MenuName
+        {
+            get
+            {
+                return this.r_MenuName;
+            }
+        }
+
         private void printMenu()    // Presents the nemu on the screen
         {
             Console.Clear();
+
             // Present the exit/back option:
             Console.WriteLine(r_MenuName + ":");
             string firstLine = "0 : " + m_ExitOrBack;
             Console.WriteLine(firstLine);
+
             // Present the rest of the items:
             string currItemToShow;
             foreach (KeyValuePair<MenuItem, Action> item in r_Items)
@@ -68,6 +78,7 @@ namespace Ex04.Menus.Delegates
                 printMenu();
                 int userChoice;
                 bool validInput;
+
                 // Get input from user: 
                 do
                 {
@@ -76,7 +87,8 @@ namespace Ex04.Menus.Delegates
                     {
                         Console.WriteLine("Input is not valid.");
                     }
-                } while (!validInput);
+                }
+                while (!validInput);
 
                 if (userChoice != 0)
                 {

@@ -27,8 +27,8 @@ namespace Ex04.Menus.Delegates
 
         public void ChooseItem()
         {
-            OnItemChosen();
             // In the future, this function can also contain other actions to do when chosen, apart from notifying listeners.
+            OnItemChosen();
         }
 
         // Let all Listeners know that this item was chosen
